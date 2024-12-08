@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Machine HMI Interface</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #e6f7ff;
+        }
+
+        #container {
+            width: 600px;
+            height: 400px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #startButton, #resetButton {
+            position: absolute;
+            top: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            z-index: 20;
+        }
+
+        #startButton {
+            left: 20px;
+            background-color: #4CAF50; 
+            color: white;
+        }
+
+        #resetButton {
+            left: 120px;
+            background-color: #f44336; 
+            color: white;
+        }
+
+        #machine {
+            position: absolute;
+            bottom: 100px;
+            left: 20%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 50px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 10px;
+            flex-direction: column;
+        }
+
+        #feedingArea {
+            position: absolute;
+            top: -30px;
+            left: 5%;
+            width: 0;
+            height: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 30px solid #a8d08d;
+            z-index: 10;
+            transform: rotate(180deg);
+        }
+
+        #materialCylinder {
+            position: relative;
+            width: 200px;
+            height: 40px;
+            background-color: #e0e0e0; 
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        #mold {
+            position: absolute;
+            width: 100px;
+            height: 60px;
+            background-color: #e0e0e0;
+            border-radius: 10px;
+            bottom: 5px;
+            left: 125%;
+            transform: translateX(-50%);
+            z-index: 5;
+            visibility: visible; 
+        }
+
+        #product {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            width: 30px;
+            height: 30px;
+            background-color: #76b6eb; 
+            border-radius: 50%;
+            transform: translateX(-50%);
+            visibility: hidden;
+        }
+
+        #belt {
+            position: absolute;
+            bottom: 0;
+            left: 40%;
+            width: 80%;
+            height: 30px;
+            background-color: #333;
+            border-radius: 5px;
+        }
+
+        #containerFilled {
+            position: absolute;
+            bottom: 100px;
+            left: 20%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 0;
+            background-color: #a8d08d;
+            border-radius: 10px;
+            z-index: 3;
+            transition: height 2s ease;
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <button id="startButton" onclick="startProcess()">Iniciar</button>
+    <button id="resetButton" onclick="resetProcess()">Detener</button>
+    
+    <div id="machine">
+        <div id="feedingArea"></div>
+        <div id="materialCylinder"></div>
+        <div id="mold"></div>
+    </div>
+
+    <div id="belt"></div>
+    <div id="product"></div>
+    <div id="containerFilled"></div>
+</div>
+
+<script>
+    let isProcessRunning = false;
+    let isProcessReset = false;
+
+    function startProcess() {
+        if (isProcessRunning || isProcessReset) return;  
+        
+        isProcessRunning = true;
+        runProcessCycle();
+    }
+
+    function resetProcess() {
+        isProcessRunning = false;
+        isProcessReset = true;
+
+        const elements = {
+            containerFilled: document.getElementById("containerFilled"),
+            materialCylinder: document.getElementById("materialCylinder"),
+            mold: document.getElementById("mold"),
+            product: document.getElementById("product")
+        };
+
+        Object.values(elements).forEach(el => {
+            el.style.height = '0px';
+            el.style.backgroundColor = '#e0e0e0';
+            el.style.visibility = 'hidden';
+        });
+
+        elements.materialCylinder.style.height = '40px'; 
+        elements.containerFilled.style.height = '0';     
+        elements.product.style.visibility = 'hidden';  
+        elements.mold.style.backgroundColor = '#e0e0e0'; 
+        elements.mold.style.visibility = 'visible'; 
+        elements.product.style.left = '50%';
+
+        isProcessReset = false;
+    }
+
+    function runProcessCycle() {
+        const containerFilled = document.getElementById("containerFilled");
+        const materialCylinder = document.getElementById("materialCylinder");
+        const mold = document.getElementById("mold");
+        const product = document.getElementById("product");
+        const belt = document.getElementById("belt");
+
+
+        containerFilled.style.height = '50px';
+
+        setTimeout(() => {
+            containerFilled.style.height = '0';
+            materialCylinder.style.height = '120px';
+            materialCylinder.style.backgroundColor = '#ff4500';
+        }, 2000);
+
+        setTimeout(() => {
+            materialCylinder.style.height = '0';
+            mold.style.backgroundColor = '#ff4500';
+        }, 4000);
+
+        setTimeout(() => {
+            mold.style.backgroundColor = '#2196F3';
+            product.style.visibility = 'visible';
+        }, 7000);
+
+        setTimeout(() => {
+            product.style.left = (mold.offsetLeft + mold.offsetWidth / 2 - 15) + 'px';
+        }, 7000);
+
+        setTimeout(() => {
+            product.style.transition = 'left 5s linear';
+            product.style.left = belt.offsetLeft + 'px';
+        }, 8000);
+
+        setTimeout(() => {
+            product.style.left = (belt.offsetLeft + belt.offsetWidth - 30) + 'px';
+        }, 8200);
+
+        setTimeout(() => {
+            product.style.visibility = 'hidden';
+            mold.style.backgroundColor = '#e0e0e0';
+            mold.style.visibility = 'visible'; 
+            if (isProcessRunning) {
+                runProcessCycle();
+            }
+        }, 13000);
+    }
+</script>
+</body>
+</html>
