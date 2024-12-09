@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Machine HMI Interface</title>
+    <title>HMI: Moldeo por inyeccion</title>
     <style>
         body, html {
             margin: 0;
@@ -77,15 +77,6 @@
             transform: rotate(180deg);
         }
 
-        #materialCylinder {
-            position: relative;
-            width: 200px;
-            height: 40px;
-            background-color: #e0e0e0; 
-            border-radius: 5px;
-            margin-top: 10px;
-        }
-
         #mold {
             position: absolute;
             width: 100px;
@@ -103,10 +94,9 @@
             position: absolute;
             bottom: 15px;
             left: 50%;
-            width: 30px;
-            height: 30px;
+            width: 40px;  
+            height: 40px; 
             background-color: #76b6eb; 
-            border-radius: 50%;
             transform: translateX(-50%);
             visibility: hidden;
         }
@@ -119,19 +109,6 @@
             height: 30px;
             background-color: #333;
             border-radius: 5px;
-        }
-
-        #containerFilled {
-            position: absolute;
-            bottom: 100px;
-            left: 20%;
-            transform: translateX(-50%);
-            width: 200px;
-            height: 0;
-            background-color: #a8d08d;
-            border-radius: 10px;
-            z-index: 3;
-            transition: height 2s ease;
         }
     </style>
 </head>
@@ -152,91 +129,51 @@
 </div>
 
 <script>
-    let isProcessRunning = false;
-    let isProcessReset = false;
+    let machine = document.getElementById("machine");
+    let startButton = document.getElementById("startButton");
+    let resetButton = document.getElementById("resetButton");
+    let mold = document.getElementById("mold");
+    let product = document.getElementById("product");
 
     function startProcess() {
-        if (isProcessRunning || isProcessReset) return;  
-        
-        isProcessRunning = true;
-        runProcessCycle();
+    
+        process();
     }
 
-    function resetProcess() {
-        isProcessRunning = false;
-        isProcessReset = true;
-
-        const elements = {
-            containerFilled: document.getElementById("containerFilled"),
-            materialCylinder: document.getElementById("materialCylinder"),
-            mold: document.getElementById("mold"),
-            product: document.getElementById("product")
-        };
-
-        Object.values(elements).forEach(el => {
-            el.style.height = '0px';
-            el.style.backgroundColor = '#e0e0e0';
-            el.style.visibility = 'hidden';
-        });
-
-        elements.materialCylinder.style.height = '40px'; 
-        elements.containerFilled.style.height = '0';     
-        elements.product.style.visibility = 'hidden';  
-        elements.mold.style.backgroundColor = '#e0e0e0'; 
-        elements.mold.style.visibility = 'visible'; 
-        elements.product.style.left = '50%';
-
-        isProcessReset = false;
-    }
-
-    function runProcessCycle() {
-        const containerFilled = document.getElementById("containerFilled");
-        const materialCylinder = document.getElementById("materialCylinder");
-        const mold = document.getElementById("mold");
-        const product = document.getElementById("product");
-        const belt = document.getElementById("belt");
-
-
-        containerFilled.style.height = '50px';
+    function process(){
 
         setTimeout(() => {
-            containerFilled.style.height = '0';
-            materialCylinder.style.height = '120px';
-            materialCylinder.style.backgroundColor = '#ff4500';
+            machine.style.backgroundColor = "#a8d08d"; 
         }, 2000);
 
         setTimeout(() => {
-            materialCylinder.style.height = '0';
-            mold.style.backgroundColor = '#ff4500';
-        }, 4000);
+            machine.style.backgroundColor = "#ff4500"; 
+        },6000);
 
         setTimeout(() => {
-            mold.style.backgroundColor = '#2196F3';
+            machine.style.backgroundColor = "#e0e0e0";
+            mold.style.backgroundColor = "#ff4500";
+        }, 8000);
+
+        setTimeout(() => {
+            mold.style.backgroundColor = "#76b6eb";
+        }, 12000);
+
+        setTimeout(() => {
+            mold.style.backgroundColor = "#e0e0e0";
             product.style.visibility = 'visible';
-        }, 7000);
-
-        setTimeout(() => {
-            product.style.left = (mold.offsetLeft + mold.offsetWidth / 2 - 15) + 'px';
-        }, 7000);
+        }, 13000);
 
         setTimeout(() => {
             product.style.transition = 'left 5s linear';
             product.style.left = belt.offsetLeft + 'px';
-        }, 8000);
+        }, 14000);
 
         setTimeout(() => {
             product.style.left = (belt.offsetLeft + belt.offsetWidth - 30) + 'px';
-        }, 8200);
-
-        setTimeout(() => {
-            product.style.visibility = 'hidden';
-            mold.style.backgroundColor = '#e0e0e0';
-            mold.style.visibility = 'visible'; 
-            if (isProcessRunning) {
-                runProcessCycle();
-            }
-        }, 13000);
+        }, 14000);
     }
-</script>
+
+</script> 
 </body>
 </html>
