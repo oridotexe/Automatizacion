@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HMI: Moldeo por inyeccion</title>
+    <title>HMI: Moldeo por inyección</title>
     <style>
         body, html {
             margin: 0;
@@ -25,7 +25,7 @@
             overflow: hidden;
         }
 
-        #startButton{
+        #startButton {
             position: absolute;
             top: 10px;
             padding: 10px 20px;
@@ -116,82 +116,84 @@
             top: 80%;
         }
 
-        #containerStates span { font-family: 'Times New Roman', Times, serif; font-size: 3vw; }
+        #containerStates span { 
+            font-family: 'Times New Roman', Times, serif; 
+            font-size: 3vw; 
+        }
     </style>
 </head>
 <body>
-<div id=" parent">
+<div id="parent">
     <div id="container">
-    <button id="startButton" onclick="startProcess()">Iniciar</button>
+        <button id="startButton" onclick="startProcess()">Iniciar</button>
 
-    <div id="machine">
-        <div id="feedingArea"></div>
-        <div id="materialCylinder"></div>
-        <div id="mold"></div>
+        <div id="machine">
+            <div id="feedingArea"></div>
+            <div id="materialCylinder"></div>
+            <div id="mold"></div>
+        </div>
+
+        <div id="belt"></div>
+        <div id="product"></div>
+        <div id="containerFilled"></div>
     </div>
 
-    <div id="belt"></div>
-    <div id="product"></div>
-    <div id="containerFilled"></div>
+    <div id="containerStates"> 
+        <span>Moldeo por inyección</span> 
+    </div>
 </div>
-
-<div id="containerStates"> 
-    <span>     Moldeo por inyección</span> 
-</div>
-</div>
-
 
 <script>
     let machine = document.getElementById("machine");
     let startButton = document.getElementById("startButton");
     let mold = document.getElementById("mold");
     let product = document.getElementById("product");
+    let belt = document.getElementById("belt");
 
     async function startProcess() {
         await process();
-        startProcess();
     }
 
-    function process(){
+    function process() {
         return new Promise((endCicle) => {
             setTimeout(() => {
-            machine.style.backgroundColor = "#a8d08d"; 
-        }, 2000);
+                machine.style.backgroundColor = "#a8d08d"; 
+            }, 2000);
 
-        setTimeout(() => {
-            machine.style.backgroundColor = "#ff4500"; 
-        }, 6000);
+            setTimeout(() => {
+                machine.style.backgroundColor = "#ff4500"; 
+            }, 6000);
 
-        setTimeout(() => {
-            machine.style.backgroundColor = "#e0e0e0";
-            mold.style.backgroundColor = "#ff4500";
-        }, 8000);
+            setTimeout(() => {
+                machine.style.backgroundColor = "#e0e0e0";
+                mold.style.backgroundColor = "#ff4500";
+            }, 8000);
 
-        setTimeout(() => {
-            mold.style.backgroundColor = "#76b6eb";
-        }, 12000);
+            setTimeout(() => {
+                mold.style.backgroundColor = "#76b6eb";
+            }, 12000);
 
-        setTimeout(() => {
-            mold.style.backgroundColor = "#e0e0e0";
-            product.style.visibility = 'visible';
-        }, 13000);
+            setTimeout(() => {
+                mold.style.backgroundColor = "#e0e0e0";
+                product.style.visibility = 'visible';
+            }, 13000);
 
-        setTimeout(() => {
-            product.style.transition = 'left 5s linear';
-            product.style.left = belt.offsetLeft + 'px';
-        }, 14000);
+            setTimeout(() => {
+                product.style.transition = 'left 5s linear';
+                product.style.left = belt.offsetLeft + 'px';
+            }, 14000);
 
-        setTimeout(() => {
-            product.style.left = (belt.offsetLeft + belt.offsetWidth - 30) + 'px';
-        }, 14000);
+            setTimeout(() => {
+                product.style.left = (belt.offsetLeft + belt.offsetWidth - 30) + 'px';
+            }, 14000);
 
-        setTimeout(() => {
-           endCicle();
-        },15000);
+            setTimeout(() => {
+                endCicle();
+            }, 15000);
         });
     }
 
-    function endCicle(){
+    function endCicle() {
         let end = 'endCicle';
     }
 </script> 
